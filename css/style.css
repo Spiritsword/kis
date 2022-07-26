@@ -45,27 +45,26 @@
   table,
   th,
   td {
-    /*border: none;*/
     font-size: 3rem;
-    /*background-color: rgba(255, 255, 255, 0.4);*/
   }
 
   table {
-    width: 50vw;
+    width: 70vw;
   }
 
   th {
     height: 5vh;
-    width: 33%;
+    width: 25%;
+    text-align: center;
   }
 
   td {
     text-align: center;
     color: lime;
     /* color: #b20f1b; */
-    border-color: default;
+    border-color: golddefault;
     height: 5vh;
-    width: 33%;
+    width: 25%;
   }
 
   .info {
