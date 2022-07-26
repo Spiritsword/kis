@@ -9,7 +9,7 @@ let maxPlaySpaceWidth = 0.9 * mainArea.clientWidth;
 let maxPlaySpaceHeight = 0.6 * mainArea.clientHeight;
 
 let maxPlaySpaceSide = Math.min(maxPlaySpaceWidth, maxPlaySpaceHeight);
-let blockSide = Math.floor(maxPlaySpaceSide / 10);
+let blockSide = Math.floor(maxPlaySpaceSide / 8);
 let horizontalBlockNumber = Math.floor(maxPlaySpaceWidth / blockSide);
 let verticalBlockNumber = Math.floor(maxPlaySpaceHeight / blockSide);
 
@@ -335,7 +335,7 @@ function newLevel() {
   clickOnTail = 'notYet';
   holyTail = undefined;
   holyTailExists = false;
-  maxSnakes = levelValue * 8 - 7;
+  maxSnakes = levelValue * 6 - 5;
   timeStep();
 }
 
