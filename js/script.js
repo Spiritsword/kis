@@ -314,7 +314,7 @@ function newGame() {
   resetLevel();
   resetScore();
   postMessage(
-    'Click holy snake tail dart whenever it moves (even if hidden).',
+    'Click holy snake tail dart whenever it moves',
     '#35347a',
     'lime'
   );
