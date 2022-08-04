@@ -293,7 +293,7 @@ function createHolySnake() {
   tailBlock.image.addEventListener('mousedown', clickTailProcessor);
   holyTail = tailBlock;
   holyTailExists = true;
-  speedupTimer = 15;
+  speedupTimer = 10 + 5 * (levelValue - 1);
   holySnake.blocks.push(tailBlock);
   snakes.push(holySnake);
 }
@@ -378,16 +378,20 @@ function moveSnake(snake) {
 
   //move all blocks (except head), starting from tail end
   for (let i = snake.blocks.length - 1; i > 0; i--) {
+    /*
     if (snake.spiritType === 'holy' && i === 1) {
       snake.blocks[i].image.style.zIndex = Number(snake.zIndex) - 1;
     } else {
       snake.blocks[i].image.style.zIndex =
         Number(snake.blocks[i - 1].image.style.zIndex) - 1;
     }
+    */
     snake.blocks[i].gridX = snake.blocks[i - 1].gridX;
     snake.blocks[i].gridY = snake.blocks[i - 1].gridY;
-    snake.blocks[i].image.style.left = `${snake.blocks[i].gridX * blockSide}px`;
-    snake.blocks[i].image.style.top = `${snake.blocks[i].gridY * blockSide}px`;
+    snake.blocks[i].image.style.left = snake.blocks[i - 1].image.style.left;
+    snake.blocks[i].image.style.top = snake.blocks[i - 1].image.style.top;
+    //snake.blocks[i].image.style.left = `${snake.blocks[i].gridX * blockSide}px`;
+    //snake.blocks[i].image.style.top = `${snake.blocks[i].gridY * blockSide}px`;
   }
 
   //move snake head according to previously determined direction
@@ -701,7 +705,7 @@ function startLevel() {
   playerAvatar = undefined;
   holyTailExists = false;
   checkClick = false;
-  maxSnakes = levelValue * 6 - 5;
+  maxSnakes = levelValue * 3 - 2;
   switch (levelValue) {
     case 1: {
       postMessage('Click tail dart whenever it moves', '#35347a', 'lime');
