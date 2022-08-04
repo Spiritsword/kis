@@ -192,7 +192,7 @@ function timeStep() {
       missedClick();
       postMessage('MISSED CLICK!', '#b20f1b', 'lime', 1);
     } else {
-      postMessage('Good Click', '#35347a');
+      postMessage('Good click', '#35347a');
       scoreValue++;
       scoreSlot.innerText = `${scoreValue * 10}`;
     }
@@ -561,14 +561,14 @@ function moveKamikaze(kamikaze) {
     xMovement = 0;
   } else {
     xMovement =
-      Math.sign(xDiff) * Math.max(1, Math.floor(Math.abs(xDiff) * 0.005));
+      Math.sign(xDiff) * Math.max(1, Math.floor(Math.abs(xDiff) * 0.001));
   }
   kamikaze.image.style.left = `${xMovement + kkCentreX - blockSide}px`;
   if (Math.abs(yDiff) < 1) {
     yMovement = 0;
   } else {
     yMovement =
-      Math.sign(yDiff) * Math.max(1, Math.floor(Math.abs(yDiff) * 0.005));
+      Math.sign(yDiff) * Math.max(1, Math.floor(Math.abs(yDiff) * 0.001));
   }
 
   xDiff = holyTailCentreX - kkCentreX;
