@@ -47,8 +47,8 @@ const angelKilled = new Audio('sound/angelkilled.wav');
 const demonKilled = new Audio('sound/demonkilled.wav');
 const angelSacrifice = new Audio('sound/angelsacrifice.wav');
 const demonSacrifice = new Audio('sound/demonsacrifice.wav');
-const moveClick = new Audio('sound/moveClick.wav');
-const shortExplosion = new Audio('sound/shortExplosion.wav');
+const moveClick = new Audio('sound/moveclick.wav');
+const shortExplosion = new Audio('sound/shortexplosion.wav');
 const tailClicked = new Audio('sound/tailclicked.wav');
 const tailMissed = new Audio('sound/tailmissed.wav');
 
