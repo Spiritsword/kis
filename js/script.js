@@ -277,14 +277,14 @@ function createHolySnake(t) {
 */
 
 function createHolySnake() {
-  let holySnake = new Snake(3, 3, 'holy', 'left', 20);
+  let holySnake = new Snake(1, 3, 'holy', 'left', 20);
   for (let i = 1; i < SNAKELENGTH - 1; i++) {
-    const newBodyBlock = new Block(i + 3, 3, 'holy', 'body', 20 - i);
+    const newBodyBlock = new Block(i + 1, 3, 'holy', 'body', 20 - i);
     newBodyBlock.image.addEventListener('mousedown', clickTailProcessor);
     holySnake.blocks.push(newBodyBlock);
   }
   const tailBlock = new Block(
-    3 + SNAKELENGTH - 1,
+    1 + SNAKELENGTH - 1,
     3,
     'holy',
     'tailleft',
@@ -631,12 +631,9 @@ function clickTailProcessor(event) {
   let gridY;
 
   if (event.target === playSpace) {
-    console.log('playspace');
     gridX = Math.floor(event.offsetX / blockSide);
     gridY = Math.floor(event.offsetY / blockSide);
   } else {
-    console.log('event target =' + event.target);
-    console.log('event target context =' + event.target.context);
     gridX = event.target.context.gridX;
     gridY = event.target.context.gridY;
   }
@@ -707,18 +704,14 @@ function startLevel() {
   maxSnakes = levelValue * 6 - 5;
   switch (levelValue) {
     case 1: {
-      postMessage(
-        'Follow holy snake: click tail dart whenever it moves',
-        '#35347a',
-        'lime'
-      );
+      postMessage('Click tail dart whenever it moves', '#35347a', 'lime');
       setTimeout(timeStep, 2000);
       setTimeout(kamikazeLoop, 5000);
       break;
     }
     case 3: {
       postMessage(
-        'Click flying "devils in disguise" before they reach the holy tail dart...',
+        `Click Hell's angels early to protect dart...`,
         '#35347a',
         'lime'
       );
