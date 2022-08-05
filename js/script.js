@@ -65,7 +65,6 @@ let kamikazes = [];
 let level;
 let clickOnTail;
 let holyTail;
-let holyTailExists;
 let checkClick;
 let gameRunning = false;
 let currentZIndex;
@@ -205,7 +204,7 @@ function timeStep() {
 
   if (speedupTimer === 0) {
     stepTime = stepTime * 0.75;
-    speedupTimer = 15;
+    speedupTimer = 8 + 4 * (levelValue - 1);
   }
 
   currentZIndex = levelValue * 3 + Math.floor(t / 2);
@@ -213,16 +212,13 @@ function timeStep() {
   moveSnakes();
   createSnakes(t);
   createKamikazes(t);
-  moveClick.play();
+  const currentMoveClick = moveClick.cloneNode();
+  currentMoveClick.play();
   t++;
   if (!(speedupTimer === undefined)) speedupTimer--;
   clickOnTail = 'notYet';
 
-  if (holyTailExists === false) {
-    setTimeout(timeStep, 0);
-  } else {
-    setTimeout(timeStep, stepTime);
-  }
+  setTimeout(timeStep, stepTime);
 }
 
 // Object creation
@@ -266,16 +262,6 @@ function createSnakes(t) {
   }
 }
 
-/*
-function createHolySnake(t) {
-  const x = randomInt(0, horizontalBlockNumber - 1);
-  const y = randomInt(0, verticalBlockNumber - 1);
-  const direction = randomDirection(x, y);
-  const holySnake = new Snake(x, y, 'holy', direction, 20);
-  snakes.push(holySnake);
-}
-*/
-
 function createHolySnake() {
   let holySnake = new Snake(1, 3, 'holy', 'left', 20);
   for (let i = 1; i < SNAKELENGTH - 1; i++) {
@@ -292,8 +278,7 @@ function createHolySnake() {
   );
   tailBlock.image.addEventListener('mousedown', clickTailProcessor);
   holyTail = tailBlock;
-  holyTailExists = true;
-  speedupTimer = 10 + 5 * (levelValue - 1);
+  speedupTimer = 8 + 4 * (levelValue - 1);
   holySnake.blocks.push(tailBlock);
   snakes.push(holySnake);
 }
@@ -318,7 +303,7 @@ function createUnholySnake(t) {
   snakes.push(unholySnake);
 }
 
-// Snake movement
+// Snake action
 
 function moveSnakes() {
   snakes.forEach(moveSnake);
@@ -354,8 +339,6 @@ function moveSnake(snake) {
         snake.blocks[SNAKELENGTH - 2].image.style.zIndex
       );
       tailBlock.image.addEventListener('mousedown', clickTailProcessor);
-
-      //record holy tail block in global variable and initiate 'holy tail exists' behaviour
       snake.blocks.push(tailBlock);
     } else if (snake.blocks.length == SNAKELENGTH) {
       //rotate tail if already there
@@ -429,7 +412,7 @@ function moveSnake(snake) {
   );
 }
 
-//kamikaze action
+// Kamikaze action
 
 function checkKamikazes() {
   kamikazes.forEach(checkKamikaze);
@@ -443,7 +426,6 @@ function checkKamikaze(kamikaze) {
 }
 
 function sacrificeKamikaze(kamikaze) {
-  //const delay = Math.random() * 1000;
   if (kamikaze.type === 'angel') {
     scoreValue = scoreValue + 5;
     scoreSlot.innerText = `${scoreValue * 10}`;
@@ -454,7 +436,7 @@ function sacrificeKamikaze(kamikaze) {
       null,
       kamikaze
     );
-    setTimeout(removeAndSpliceOutKamikazeBound, 3000);
+    setTimeout(removeAndSpliceOutKamikazeBound, 1500);
   } else {
     scoreValue = scoreValue - 5;
     scoreSlot.innerText = `${scoreValue * 10}`;
@@ -578,6 +560,19 @@ function moveKamikaze(kamikaze) {
   }
 }
 
+// Avatar action
+
+function createMoveAvatar(gridX, gridY) {
+  if (playerAvatar === undefined) {
+    createAvatar(gridX, gridY);
+  } else {
+    playerAvatar.gridX = gridX;
+    playerAvatar.gridY = gridY;
+    playerAvatar.image.style.left = `${gridX * blockSide + blockSide / 4}px`;
+    playerAvatar.image.style.top = `${gridY * blockSide + blockSide / 4}px`;
+  }
+}
+
 // Click processing
 
 function killKamikaze(event) {
@@ -585,7 +580,6 @@ function killKamikaze(event) {
   const kamikaze = event.target.context;
   const gridX = Math.floor(event.offsetX / blockSide);
   const gridY = Math.floor(event.offsetY / blockSide);
-  createMoveAvatar(gridX, gridY);
   if (kamikaze.state === 'alive') {
     kamikaze.state = 'dead';
     if (kamikaze.type === 'angel') {
@@ -608,17 +602,6 @@ function missedClick() {
   livesSlot.innerText = livesValue;
 }
 
-function createMoveAvatar(gridX, gridY) {
-  if (playerAvatar === undefined) {
-    createAvatar(gridX, gridY);
-  } else {
-    playerAvatar.gridX = gridX;
-    playerAvatar.gridY = gridY;
-    playerAvatar.image.style.left = `${gridX * blockSide + blockSide / 4}px`;
-    playerAvatar.image.style.top = `${gridY * blockSide + blockSide / 4}px`;
-  }
-}
-
 function clickTailProcessor(event) {
   event.stopPropagation();
   let gridX;
@@ -635,7 +618,6 @@ function clickTailProcessor(event) {
   createMoveAvatar(gridX, gridY);
 
   let correctHit;
-  if (!holyTailExists) return;
   if (gridX == holyTail.gridX && gridY == holyTail.gridY) {
     correctHit = true;
   } else correctHit = false;
@@ -663,7 +645,7 @@ function clickTailProcessor(event) {
   }
 }
 
-// Initialise and reset functions
+// Initialise, removal and reset functions
 
 function newGame() {
   console.log('New game');
@@ -679,8 +661,16 @@ function startGame() {
   startLevel();
 }
 
-function resetAbort() {
-  abort = false;
+function resetLevel() {
+  levelValue = 1;
+  levelSlot.innerText = `${levelValue}`;
+}
+
+function gameOver() {
+  postMessage('GAME OVER', 'gold', '#3b3992', '1');
+  gameRunning = false;
+  highScoreValue = Math.max(scoreValue, highScoreValue);
+  highScoreSlot.innerText = `${highScoreValue * 10}`;
 }
 
 function startLevel() {
@@ -693,7 +683,6 @@ function startLevel() {
   clickOnTail = 'notYet';
   holyTail = undefined;
   playerAvatar = undefined;
-  holyTailExists = false;
   checkClick = false;
   maxSnakes = levelValue * 3 - 2;
   switch (levelValue) {
@@ -705,7 +694,7 @@ function startLevel() {
     }
     case 3: {
       postMessage(
-        `Click Hell's angels early to protect dart...`,
+        `Click Hell's angels early to protect dart`,
         '#35347a',
         'lime'
       );
@@ -714,7 +703,7 @@ function startLevel() {
       break;
     }
     case 4: {
-      postMessage(`...but don't kill the good angels!`, '#35347a', 'lime');
+      postMessage(`Don't kill the good angels!`, '#35347a', 'lime');
       setTimeout(timeStep, 2000);
       setTimeout(kamikazeLoop, 5000);
       break;
@@ -724,6 +713,20 @@ function startLevel() {
       kamikazeLoop();
     }
   }
+}
+
+function endLevel() {
+  clearMessage();
+  removeAvatar();
+  removeSnakes();
+  removeKamikazes();
+  playSpace.removeEventListener('mousedown', clickTailProcessor);
+}
+
+function newLevel() {
+  levelValue++;
+  postMessage('NEXT LEVEL', '#35347A', 'lime');
+  setTimeout(startLevel, 1000);
 }
 
 function removeSnakes() {
@@ -774,36 +777,14 @@ function resetScore() {
   scoreSlot.innerText = `${scoreValue}`;
 }
 
-function resetLevel() {
-  levelValue = 1;
-  levelSlot.innerText = `${levelValue}`;
-}
-
-function gameOver() {
-  postMessage('GAME OVER', 'gold', '#3b3992', '1');
-  gameRunning = false;
-  highScoreValue = Math.max(scoreValue, highScoreValue);
-  highScoreSlot.innerText = `${highScoreValue * 10}`;
+function resetAbort() {
+  abort = false;
 }
 
 function removeAvatar() {
   if (!(playerAvatar === undefined)) {
     playerAvatar.image.style.display = 'none';
   }
-}
-
-function endLevel() {
-  clearMessage();
-  removeAvatar();
-  removeSnakes();
-  removeKamikazes();
-  playSpace.removeEventListener('mousedown', clickTailProcessor);
-}
-
-function newLevel() {
-  levelValue++;
-  postMessage('NEXT LEVEL', '#35347A', 'lime');
-  setTimeout(startLevel, 1000);
 }
 
 function playerDead() {
@@ -814,7 +795,7 @@ function playerDead() {
   }
 }
 
-// Helper functions
+// Miscellaneous functions
 
 function clearMessage() {
   infoSlot.style.opacity = 0;
