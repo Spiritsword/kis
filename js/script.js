@@ -378,20 +378,10 @@ function moveSnake(snake) {
 
   //move all blocks (except head), starting from tail end
   for (let i = snake.blocks.length - 1; i > 0; i--) {
-    /*
-    if (snake.spiritType === 'holy' && i === 1) {
-      snake.blocks[i].image.style.zIndex = Number(snake.zIndex) - 1;
-    } else {
-      snake.blocks[i].image.style.zIndex =
-        Number(snake.blocks[i - 1].image.style.zIndex) - 1;
-    }
-    */
     snake.blocks[i].gridX = snake.blocks[i - 1].gridX;
     snake.blocks[i].gridY = snake.blocks[i - 1].gridY;
     snake.blocks[i].image.style.left = snake.blocks[i - 1].image.style.left;
     snake.blocks[i].image.style.top = snake.blocks[i - 1].image.style.top;
-    //snake.blocks[i].image.style.left = `${snake.blocks[i].gridX * blockSide}px`;
-    //snake.blocks[i].image.style.top = `${snake.blocks[i].gridY * blockSide}px`;
   }
 
   //move snake head according to previously determined direction
@@ -490,7 +480,7 @@ function explodeKamikaze(kamikaze) {
   function show0() {
     kamikaze.explosion[0].style.opacity = 0.7;
     kamikaze.explosion[0].style.visibility = 'visible';
-    setTimeout(hide0, 1000);
+    setTimeout(hide0, 500);
   }
 
   function hide0() {
@@ -500,7 +490,7 @@ function explodeKamikaze(kamikaze) {
   function show1() {
     kamikaze.explosion[1].style.opacity = 0.7;
     kamikaze.explosion[1].style.visibility = 'visible';
-    setTimeout(hide1, 1000);
+    setTimeout(hide1, 500);
   }
 
   function hide1() {
@@ -510,7 +500,7 @@ function explodeKamikaze(kamikaze) {
   function show2() {
     kamikaze.explosion[2].style.opacity = 0.7;
     kamikaze.explosion[2].style.visibility = 'visible';
-    setTimeout(hide2, 1000);
+    setTimeout(hide2, 500);
   }
 
   function hide2() {
@@ -518,10 +508,10 @@ function explodeKamikaze(kamikaze) {
     removeAndSpliceOutKamikaze(kamikaze);
   }
   const fadeRecursiveBound = fadeRecursive.bind(null, kamikaze);
-  setTimeout(fadeRecursiveBound, 1000);
-  setTimeout(show0, 500);
-  setTimeout(show1, 1000);
-  setTimeout(show2, 1500);
+  setTimeout(fadeRecursiveBound, 500);
+  setTimeout(show0, 250);
+  setTimeout(show1, 500);
+  setTimeout(show2, 750);
 }
 
 function fadeRecursive(kamikaze) {
