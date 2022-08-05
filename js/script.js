@@ -533,8 +533,8 @@ function moveKamikaze(kamikaze) {
     blockSide / 2;
   let xDiff = holyTailCentreX - kkCentreX;
   let yDiff = holyTailCentreY - kkCentreY;
-  let xMovement = xDiff * 0.001 * (blockSide / 10);
-  let yMovement = yDiff * 0.001 * (blockSide / 10);
+  let xMovement = xDiff * 0.001 * (blockSide / 30);
+  let yMovement = yDiff * 0.001 * (blockSide / 30);
   kamikaze.exactLeft = kamikaze.exactLeft + xMovement;
   kamikaze.exactTop = kamikaze.exactTop + yMovement;
   kamikaze.image.style.left = `${kamikaze.exactLeft}px`;
