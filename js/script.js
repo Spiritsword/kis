@@ -151,6 +151,8 @@ class Kamikaze {
     this.image.style.position = 'absolute';
     this.image.style.left = `${gridX * blockSide}px`;
     this.image.style.top = `${gridY * blockSide}px`;
+    this.exactLeft = gridX * blockSide;
+    this.exactTop = gridY * blockSide;
     this.type = type;
     this.exploding = false;
     this.explosion = undefined;
@@ -500,7 +502,7 @@ function fadeRecursive(kamikaze) {
   if (kamikaze.image.style.opacity <= 0) {
     kamikaze.image.style.visibility = 'hidden';
   } else {
-    kamikaze.image.style.opacity = kamikaze.image.style.opacity - 0.01;
+    kamikaze.image.style.opacity = kamikaze.image.style.opacity - 0.02;
     const fadeRecursiveBound = fadeRecursive.bind(null, kamikaze);
     setTimeout(fadeRecursiveBound, 10);
   }
@@ -531,25 +533,15 @@ function moveKamikaze(kamikaze) {
     blockSide / 2;
   let xDiff = holyTailCentreX - kkCentreX;
   let yDiff = holyTailCentreY - kkCentreY;
-  let xMovement;
-  let yMovement;
-  if (Math.abs(xDiff) < 1) {
-    xMovement = 0;
-  } else {
-    xMovement =
-      Math.sign(xDiff) * Math.max(1, Math.floor(Math.abs(xDiff) * 0.001));
-  }
-  kamikaze.image.style.left = `${xMovement + kkCentreX - blockSide}px`;
-  if (Math.abs(yDiff) < 1) {
-    yMovement = 0;
-  } else {
-    yMovement =
-      Math.sign(yDiff) * Math.max(1, Math.floor(Math.abs(yDiff) * 0.001));
-  }
+  let xMovement = xDiff * 0.001 * (blockSide / 10);
+  let yMovement = yDiff * 0.001 * (blockSide / 10);
+  kamikaze.exactLeft = kamikaze.exactLeft + xMovement;
+  kamikaze.exactTop = kamikaze.exactTop + yMovement;
+  kamikaze.image.style.left = `${kamikaze.exactLeft}px`;
+  kamikaze.image.style.top = `${kamikaze.exactTop}px`;
 
   xDiff = holyTailCentreX - kkCentreX;
   yDiff = holyTailCentreY - kkCentreY;
-  kamikaze.image.style.top = `${yMovement + kkCentreY - blockSide}px`;
   kamikaze.distanceToTail = Math.sqrt(xDiff ** 2 + yDiff ** 2);
 
   if (kamikaze.exploding) {
@@ -648,13 +640,11 @@ function clickTailProcessor(event) {
 // Initialise, removal and reset functions
 
 function newGame() {
-  console.log('New game');
   if (gameRunning) abort = true;
   else startGame();
 }
 
 function startGame() {
-  console.log('Game starting');
   gameRunning = true;
   resetScore();
   resetLevel();
@@ -689,7 +679,6 @@ function startLevel() {
     case 1: {
       postMessage('Click tail dart whenever it moves', '#35347a', 'lime');
       setTimeout(timeStep, 2000);
-      setTimeout(kamikazeLoop, 5000);
       break;
     }
     case 3: {
@@ -699,13 +688,13 @@ function startLevel() {
         'lime'
       );
       setTimeout(timeStep, 2000);
-      setTimeout(kamikazeLoop, 5000);
+      setTimeout(kamikazeLoop, 4000);
       break;
     }
     case 4: {
       postMessage(`Don't kill the good angels!`, '#35347a', 'lime');
       setTimeout(timeStep, 2000);
-      setTimeout(kamikazeLoop, 5000);
+      setTimeout(kamikazeLoop, 4000);
       break;
     }
     default: {
